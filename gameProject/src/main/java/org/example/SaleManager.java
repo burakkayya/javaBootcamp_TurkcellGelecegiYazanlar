@@ -1,6 +1,5 @@
 package org.example;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SaleManager {
@@ -43,7 +42,7 @@ public class SaleManager {
         public List<Sale> getAll() {
             return sales;
         }
-        public void sell(Order order)
+        public void sell(Cart order)
         {
             for (Game game : order.getGames()){
                 System.out.println(game.getName() + " oyunu, " + order.getGamer().getUserName() + " adlı kullanıcıya satıldı.");
