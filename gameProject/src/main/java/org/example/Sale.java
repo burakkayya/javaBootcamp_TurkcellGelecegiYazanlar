@@ -2,11 +2,11 @@ package org.example;
 
 public class Sale {
     private int id;
-    private Cart order;
+    private Cart cart;
 
-    public Sale(int id, Cart order) {
+    public Sale(int id, Cart cart) {
         this.id = id;
-        this.order = order;
+        this.cart = cart;
     }
 
     public Sale() {
@@ -20,12 +20,12 @@ public class Sale {
         this.id = id;
     }
 
-    public Cart getOrder() {
-        return order;
+    public Cart getCart() {
+        return cart;
     }
 
-    public void setOrder(Cart order) {
-        this.order = order;
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
 }

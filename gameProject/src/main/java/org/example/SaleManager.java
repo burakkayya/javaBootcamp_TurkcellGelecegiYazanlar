@@ -24,7 +24,7 @@ public class SaleManager {
         public void update(Sale sale) {
         for (Sale s:sales){
             if (s.getId()== sale.getId()){
-                s.setOrder(sale.getOrder());
+                s.setCart(sale.getCart());
             }
         }
             System.out.println("Satış başarı ile güncellendi!");
@@ -42,10 +42,10 @@ public class SaleManager {
         public List<Sale> getAll() {
             return sales;
         }
-        public void sell(Cart order)
+        public void sell(Cart cart)
         {
-            for (Game game : order.getGames()){
-                System.out.println(game.getName() + " oyunu, " + order.getGamer().getUserName() + " adlı kullanıcıya satıldı.");
+            for (Game game : cart.getGames()){
+                System.out.println(game.getName() + " oyunu, " + cart.getGamer().getUserName() + " adlı kullanıcıya satıldı.");
             }
         }
 
