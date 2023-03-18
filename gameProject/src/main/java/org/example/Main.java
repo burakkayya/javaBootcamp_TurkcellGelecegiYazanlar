@@ -1,5 +1,8 @@
 package org.example;
 
+import org.example.entities.*;
+import org.example.managers.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,15 +13,15 @@ public class Main {
         List<Gamer> gamers=new ArrayList<>();
         List<User> users=new ArrayList<>();
         List<Game> games=new ArrayList<>();
-        List<Cart> orders=new ArrayList<>();
+        List<Cart> carts=new ArrayList<>();
         List<Campaign> campaigns=new ArrayList<>();
         List<Sale> sales=new ArrayList<>();
-        EDevlet eDevlet=new EDevlet();
+        EDevletVerificationManager eDevletVerificationManager =new EDevletVerificationManager();
         UserManager userManager=new UserManager(users);
-        GamerManager gamerManager=new GamerManager(gamers,userManager,eDevlet);
+        GamerManager gamerManager=new GamerManager(gamers,userManager, eDevletVerificationManager);
         GameManager gameManager=new GameManager(games);
         CampaignManager campaignManager=new CampaignManager(campaigns);
-        CartManager orderManager=new CartManager(orders,campaignManager);
+        CartManager cartManager=new CartManager(carts,campaignManager);
         SaleManager saleManager=new SaleManager(sales);
 
 
@@ -48,8 +51,8 @@ public class Main {
         //Sistemde kampanya olacak oyunlar seçilir
         //ve seçilen oyunlar bir listeye aklenir
         ArrayList<Game> campaignGames=new ArrayList<Game>();
-        campaignGames.add(gameManager.read(3));
-        campaignGames.add(gameManager.read(4));
+        campaignGames.add(gameManager.get(3));
+        campaignGames.add(gameManager.get(4));
 
         //Sisteme diğer kampanya bilgileri girilir ve
         // kampanya oluştur butonu tıklanır;
@@ -59,22 +62,22 @@ public class Main {
         campaignManager.update(new Campaign(1,35,"Bahar kapıda indirimleri distopik oyunlarda!",campaignGames,new Date(2023,3,3),new Date(2023,4,4),false));
 
         //Sisteme kayıt olan kullanıcı sistemden istediği oyunları sepetine ekler
-        ArrayList<Game> cart=new ArrayList<Game>();
-        cart.add(gameManager.read(3));
-        cart.add(gameManager.read(4));
+        List<Game> cart=new ArrayList<>();
+        cart.add(gameManager.get(3));
+        cart.add(gameManager.get(4));
 
         // ve satın al butonuna basar;
-        orderManager.create(new Cart(1,new Date(2023,3,16),cart,gamerManager.read(3),false));
-        saleManager.add(new Sale(1,orderManager.read(1)));
-        saleManager.sell(orderManager.read(1));
+        cartManager.create(new Cart(1,new Date(2023,3,16),cart,gamerManager.get(3),false));
+        saleManager.add(new Sale(1,cartManager.get(1)));
+        saleManager.sell(cartManager.get(1));
 
         //kampanya sistemden sil butonuna basılarak silinir;
         campaignManager.delete(1);
 
         //Başka bir satın alma işlemi gerçekleşir;
-        orderManager.create(new Cart(1,new Date(2023,3,16),cart,gamerManager.read(3),false));
-        saleManager.add(new Sale(1,orderManager.read(1)));
-        saleManager.sell(orderManager.read(1));
+        cartManager.create(new Cart(1,new Date(2023,3,16),cart,gamerManager.get(3),false));
+        saleManager.add(new Sale(1,cartManager.get(1)));
+        saleManager.sell(cartManager.get(1));
 
     }
 }
