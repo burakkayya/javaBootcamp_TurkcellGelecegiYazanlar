@@ -2,6 +2,7 @@ package kodlama.io.rentacar.api.controllers;
 
 import kodlama.io.rentacar.business.abstracts.BrandService;
 import kodlama.io.rentacar.entities.concretes.Brand;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -9,16 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/brands")
+@AllArgsConstructor
+@RequestMapping("api/brands")
 public class BrandsController {
     private BrandService service;
 
-    @Autowired
-    public BrandsController(BrandService service) {
-        this.service = service;
-    }
-
-    @GetMapping("/getAll")
+    @GetMapping
     public List<Brand> getAll(){
         return service.getAll();
     }

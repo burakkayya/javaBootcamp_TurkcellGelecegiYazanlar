@@ -1,42 +1,25 @@
 package kodlama.io.rentacar.entities.concretes;
 
-import java.awt.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "brands")
 public class Brand {
+    @Id // Primary Key
+    //@Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    //@Column(name = "name")
     private String name;
+    //@Column(name = "slogan")
     private String slogan;
 
-    public Brand() {
-    }
-
-    public Brand(int id, String name, String slogan) {
-        this.id = id;
-        this.name = name;
-        this.slogan = slogan;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSlogan() {
-        return slogan;
-    }
-
-    public void setSlogan(String slogan) {
-        this.slogan = slogan;
-    }
 }

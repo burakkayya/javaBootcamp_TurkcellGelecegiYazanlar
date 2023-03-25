@@ -3,47 +3,51 @@ package kodlama.io.rentacar.business.concretes;
 import kodlama.io.rentacar.business.abstracts.BrandService;
 import kodlama.io.rentacar.entities.concretes.Brand;
 import kodlama.io.rentacar.repository.abstracts.BrandRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class BrandManager implements BrandService {
-    private BrandRepository repository;
 
-    public BrandManager(BrandRepository repository) {
-        this.repository = repository;
-    }
+    private final BrandRepository repository;
 
     @Override
     public List<Brand> getAll() {
-
-        if(repository.getAll().size()==0) throw new RuntimeException("Marka Bulunamadı!");
-        return repository.getAll();
+        return repository.findAll();
     }
 
     @Override
     public Brand getById(int id) {
-        return repository.getById(id);
+        checkIfBrandExists(id);
+        return repository.findById(id).orElseThrow();
     }
 
     @Override
     public Brand add(Brand brand) {
-        validateBrand(brand);
-        return repository.add(brand);
+        return repository.save(brand);
     }
 
     @Override
     public Brand update(int id, Brand brand) {
-        validateBrand(brand);
-        return repository.update(id,brand);
+        checkIfBrandExists(id);
+        brand.setId(id);
+        return repository.save(brand);
     }
 
     @Override
     public void delete(int id) {
-        repository.delete(id);
+        checkIfBrandExists(id);
+        repository.deleteById(id);
     }
 
+    //Business rules
+
+    private void checkIfBrandExists(int id){
+        if(!repository.existsById(id)) throw new RuntimeException("Böyle bir marka mevcut değil!");
+    }
     private void validateBrand(Brand brand){
         checkIfNameLengthValid(brand);
         checkIfSloganLengthValid(brand);
