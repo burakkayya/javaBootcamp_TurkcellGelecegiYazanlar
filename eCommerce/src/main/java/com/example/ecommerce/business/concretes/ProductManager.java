@@ -3,45 +3,51 @@ package com.example.ecommerce.business.concretes;
 import com.example.ecommerce.business.abstracts.ProductService;
 import com.example.ecommerce.entities.concretes.Product;
 import com.example.ecommerce.repository.abstracts.ProductRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+@AllArgsConstructor
 @Service
 public class ProductManager implements ProductService {
 
     private final ProductRepository repository;
 
-    public ProductManager(ProductRepository repository) {
-        this.repository = repository;
-    }
-
     @Override
     public List<Product> getAll() {
-        return repository.getAll();
+        return repository.findAll();
     }
 
     @Override
     public Product getById(int id) {
-        return repository.getById(id);
+        checkIfBrandExists(id);
+        return repository.findById(id).orElseThrow();
     }
 
     @Override
     public Product add(Product product) {
         validateProduct(product);
-        return repository.add(product);
+        return repository.save(product);
     }
 
     @Override
     public Product update(int id, Product product) {
+        checkIfBrandExists(id);
         validateProduct(product);
-        return repository.update(id,product);
+        product.setId(id);
+        return repository.save(product);
     }
 
     @Override
     public void delete(int id) {
-        repository.delete(id);
+        checkIfBrandExists(id);
+        repository.deleteById(id);
     }
 
+
+    private void checkIfBrandExists(int id){
+        if(!repository.existsById(id)) throw new RuntimeException("Böyle bir ürün mevcut değil!");
+    }
     private void validateProduct(Product product){
         checkIfDescriptionLengthValid(product);
         checkIfQuantityValid(product);

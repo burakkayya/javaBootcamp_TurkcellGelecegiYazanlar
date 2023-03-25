@@ -2,20 +2,18 @@ package com.example.ecommerce.api.controllers;
 
 import com.example.ecommerce.business.abstracts.ProductService;
 import com.example.ecommerce.entities.concretes.Product;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/products")
 public class ProductsController {
 
     private final ProductService service;
-
-    public ProductsController(ProductService service) {
-        this.service = service;
-    }
 
     @GetMapping
     public List<Product> getAll(){
