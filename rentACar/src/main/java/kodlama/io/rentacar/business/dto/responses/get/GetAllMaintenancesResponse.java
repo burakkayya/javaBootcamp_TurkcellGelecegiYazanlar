@@ -5,15 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class GetAllModelsResponse {
-
+public class GetAllMaintenancesResponse {
     private int id;
-    private int brandId;
-    private String name;
-    private String brandName;
+    private int carId;
 }

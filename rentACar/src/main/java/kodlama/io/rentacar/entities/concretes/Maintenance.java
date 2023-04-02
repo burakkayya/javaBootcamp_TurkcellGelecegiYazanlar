@@ -13,15 +13,12 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "brands")
-public class Brand {
-    @Id // Primary Key
-    //@Column(name = "id")
+@Table(name = "maintenances")
+public class Maintenance {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    //@Column(name = "name")
-    private String name;
-    @OneToMany(mappedBy = "brand")
-    private List<Model> models;
 
+    @OneToMany
+    private List<Car> cars;
 }

@@ -2,15 +2,17 @@ package kodlama.io.rentacar.business.concretes;
 
 import kodlama.io.rentacar.business.abstracts.BrandService;
 import kodlama.io.rentacar.business.dto.requests.create.CreateBrandRequest;
+import kodlama.io.rentacar.business.dto.requests.update.UpdateBrandRequest;
 import kodlama.io.rentacar.business.dto.responses.create.CreateBrandResponse;
 import kodlama.io.rentacar.business.dto.responses.get.GetAllBrandsResponse;
 import kodlama.io.rentacar.business.dto.responses.get.GetBrandResponse;
+import kodlama.io.rentacar.business.dto.responses.update.UpdateBrandResponse;
 import kodlama.io.rentacar.entities.concretes.Brand;
 import kodlama.io.rentacar.repository.abstracts.BrandRepository;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,55 +20,56 @@ import java.util.List;
 public class BrandManager implements BrandService {
 
     private final BrandRepository repository;
+    private final ModelMapper mapper;
 
     @Override
     public List<GetAllBrandsResponse> getAll() {
         List<Brand> brands = repository.findAll();
-        List<GetAllBrandsResponse> responses = new ArrayList<>();
-        for (Brand brand : brands) {
-            responses.add(new GetAllBrandsResponse(brand.getId(), brand.getName()));
-        }
+        List<GetAllBrandsResponse> responses = brands
+                .stream()
+                .map(brand -> mapper.map(brand, GetAllBrandsResponse.class))
+                .toList();
         return responses;
     }
 
     @Override
     public GetBrandResponse getById(int id) {
-        checkIfBrandExists(id);
+        checkIfBrandExistsById(id);
         Brand brand = repository.findById(id).orElseThrow();
-        GetBrandResponse response = new GetBrandResponse();
-        response.setName(brand.getName());
-        response.setId(brand.getId());
+        GetBrandResponse response = mapper.map(brand, GetBrandResponse.class);
         return response;
     }
 
     @Override
     public CreateBrandResponse add(CreateBrandRequest request) {
-        Brand brand = new Brand();
-        brand.setName(request.getName());
-        repository.save(brand);
 
-        CreateBrandResponse response = new CreateBrandResponse();
-        response.setId(brand.getId());
-        response.setName(brand.getName());
+        checkIfBrandExistByName(request.getName());
+        Brand brand= mapper.map(request,Brand.class);
+        brand.setId(0);
+        Brand createdBrand = repository.save(brand);
+        CreateBrandResponse response = mapper.map(createdBrand,CreateBrandResponse.class);
         return response;
     }
 
     @Override
-    public Brand update(int id, Brand brand) {
-        checkIfBrandExists(id);
+    public UpdateBrandResponse update(int id, UpdateBrandRequest request) {
+        checkIfBrandExistsById(id);
+        Brand brand = mapper.map(request,Brand.class);
         brand.setId(id);
-        return repository.save(brand);
+        repository.save(brand);
+        UpdateBrandResponse response = mapper.map(brand,UpdateBrandResponse.class);
+        return response;
     }
 
     @Override
     public void delete(int id) {
-        checkIfBrandExists(id);
+        checkIfBrandExistsById(id);
         repository.deleteById(id);
     }
 
     //Business rules
 
-    private void checkIfBrandExists(int id){
+    private void checkIfBrandExistsById(int id){
         if(!repository.existsById(id)) throw new RuntimeException("Böyle bir marka mevcut değil!");
     }
     private void validateBrand(Brand brand){
@@ -76,6 +79,10 @@ public class BrandManager implements BrandService {
 
     private void checkIfNameLengthValid(Brand brand) {
         if(brand.getName().length()<3 || brand.getName().length()>20) throw new IllegalArgumentException("Name lenght must be between 3 and 20 character.");
+    }
+
+    private void checkIfBrandExistByName(String name){
+        if(repository.existsByNameIgnoreCase(name)) throw new RuntimeException("Böyle bir marka sistemde kayıtlı!");
     }
 
 }

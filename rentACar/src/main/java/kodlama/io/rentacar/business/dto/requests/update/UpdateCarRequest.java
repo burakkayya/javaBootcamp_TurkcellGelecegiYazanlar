@@ -1,4 +1,4 @@
-package kodlama.io.rentacar.business.dto.requests.create;
+package kodlama.io.rentacar.business.dto.requests.update;
 
 import kodlama.io.rentacar.entities.concretes.State;
 import lombok.AllArgsConstructor;
@@ -6,12 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateCarRequest {
+public class UpdateCarRequest {
     private int modelId;
     private String name;
-    private State state=State.AVAILABLE;
+    private State state;
 }
