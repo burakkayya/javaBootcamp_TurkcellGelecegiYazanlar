@@ -14,9 +14,9 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/models")
+@RequestMapping("/api/model")
 public class ModelsController {
-    ModelService service;
+    private final ModelService service;
 
     @GetMapping
     public List<GetAllModelsResponse> getAll(){

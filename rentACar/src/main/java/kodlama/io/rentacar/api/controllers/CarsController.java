@@ -15,13 +15,13 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/cars")
+@RequestMapping("/api/car")
 public class CarsController {
 
-    CarService service;
+    private final CarService service;
     @GetMapping
-    public List<GetAllCarsResponse> getAll(){
-        return service.getAll();
+    public List<GetAllCarsResponse> getAll(@RequestParam (defaultValue = "true") boolean includeMaintenance){
+        return service.getAll(includeMaintenance);
     }
 
     @GetMapping("/{id}")
@@ -43,10 +43,5 @@ public class CarsController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable int id){
         service.delete(id);
-    }
-
-    @PutMapping("/{carId}")
-    public UpdateCarResponse sendToService(@PathVariable int carId){
-        return service.sendToService(carId);
     }
 }

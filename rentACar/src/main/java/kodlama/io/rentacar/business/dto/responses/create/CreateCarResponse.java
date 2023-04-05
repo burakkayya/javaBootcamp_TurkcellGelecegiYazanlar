@@ -1,6 +1,6 @@
 package kodlama.io.rentacar.business.dto.responses.create;
 
-import kodlama.io.rentacar.entities.concretes.State;
+import kodlama.io.rentacar.entities.concretes.enums.State;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +14,8 @@ public class CreateCarResponse {
 
     private int id;
     private int modelId;
-    private String name;
+    private int modelYear;
+    private String plate;
+    private double dailyPrice;
     private State state;
 }
