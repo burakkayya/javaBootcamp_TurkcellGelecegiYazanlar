@@ -1,9 +1,16 @@
 package com.example.ecommerce.business.concretes;
 
 import com.example.ecommerce.business.abstracts.ProductService;
+import com.example.ecommerce.business.dto.requests.create.CreateProductRequest;
+import com.example.ecommerce.business.dto.requests.update.UpdateProductRequest;
+import com.example.ecommerce.business.dto.responses.create.CreateProductResponse;
+import com.example.ecommerce.business.dto.responses.get.GetAllProductResponse;
+import com.example.ecommerce.business.dto.responses.get.GetProductResponse;
+import com.example.ecommerce.business.dto.responses.update.UpdateProductResponse;
 import com.example.ecommerce.entities.concretes.Product;
 import com.example.ecommerce.repository.abstracts.ProductRepository;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,40 +19,56 @@ import java.util.List;
 public class ProductManager implements ProductService {
 
     private final ProductRepository repository;
+    private final ModelMapper mapper;
 
     @Override
-    public List<Product> getAll() {
-        return repository.findAll();
+    public List<GetAllProductResponse> getAll() {
+        List<Product> products = repository.findAll();
+        List<GetAllProductResponse> responses = products
+                .stream()
+                .map(product -> mapper.map(product,GetAllProductResponse.class))
+                .toList();
+        return responses;
     }
 
     @Override
-    public Product getById(int id) {
-        checkIfBrandExists(id);
-        return repository.findById(id).orElseThrow();
+    public GetProductResponse getById(int id) {
+        checkIfProductExists(id);
+        Product product = repository.findById(id).orElseThrow();
+        GetProductResponse response = mapper.map(product,GetProductResponse.class);
+        return response;
     }
 
     @Override
-    public Product add(Product product) {
+    public CreateProductResponse add(CreateProductRequest request) {
+
+        Product product = mapper.map(request, Product.class);
+        product.setId(0);
         validateProduct(product);
-        return repository.save(product);
+        Product createdProduct = repository.save(product);
+        CreateProductResponse response = mapper.map(createdProduct, CreateProductResponse.class);
+        return response;
     }
 
     @Override
-    public Product update(int id, Product product) {
-        checkIfBrandExists(id);
-        validateProduct(product);
+    public UpdateProductResponse update(int id, UpdateProductRequest request) {
+        checkIfProductExists(id);
+        Product product = mapper.map(request, Product.class);
         product.setId(id);
-        return repository.save(product);
+        validateProduct(product);
+        Product updatedProduct = repository.save(product);
+        UpdateProductResponse response = mapper.map(updatedProduct,UpdateProductResponse.class);
+        return response;
     }
 
     @Override
     public void delete(int id) {
-        checkIfBrandExists(id);
+        checkIfProductExists(id);
         repository.deleteById(id);
     }
 
 
-    private void checkIfBrandExists(int id){
+    private void checkIfProductExists(int id){
         if(!repository.existsById(id)) throw new RuntimeException("Böyle bir ürün mevcut değil!");
     }
     private void validateProduct(Product product){

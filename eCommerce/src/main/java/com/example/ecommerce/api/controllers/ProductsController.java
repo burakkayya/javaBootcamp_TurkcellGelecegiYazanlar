@@ -1,7 +1,12 @@
 package com.example.ecommerce.api.controllers;
 
 import com.example.ecommerce.business.abstracts.ProductService;
-import com.example.ecommerce.entities.concretes.Product;
+import com.example.ecommerce.business.dto.requests.create.CreateProductRequest;
+import com.example.ecommerce.business.dto.requests.update.UpdateProductRequest;
+import com.example.ecommerce.business.dto.responses.create.CreateProductResponse;
+import com.example.ecommerce.business.dto.responses.get.GetAllProductResponse;
+import com.example.ecommerce.business.dto.responses.get.GetProductResponse;
+import com.example.ecommerce.business.dto.responses.update.UpdateProductResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -10,29 +15,29 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/products")
+@RequestMapping("/api/product")
 public class ProductsController {
 
     private final ProductService service;
 
     @GetMapping
-    public List<Product> getAll(){
+    public List<GetAllProductResponse> getAll(){
         return service.getAll();
     }
     @GetMapping("/{id}")
-    public Product getById(@PathVariable int id){
+    public GetProductResponse getById(@PathVariable int id){
         return service.getById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Product add(@RequestBody Product product){
-        return service.add(product);
+    public CreateProductResponse add(@RequestBody CreateProductRequest request){
+        return service.add(request);
     }
 
     @PutMapping("/{id}")
-    public Product update(@PathVariable int id, @RequestBody Product product){
-        return service.update(id,product);
+    public UpdateProductResponse update(@PathVariable int id, @RequestBody UpdateProductRequest request){
+        return service.update(id,request);
     }
 
     @DeleteMapping("/{id}")
