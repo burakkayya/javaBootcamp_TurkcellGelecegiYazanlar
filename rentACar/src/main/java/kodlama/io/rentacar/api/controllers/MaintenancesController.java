@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/maintenance")
+@RequestMapping("/api/maintenances")
 public class MaintenancesController {
     private final MaintenanceService service;
 

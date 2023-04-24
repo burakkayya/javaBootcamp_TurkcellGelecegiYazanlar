@@ -9,6 +9,7 @@ import kodlama.io.rentacar.business.dto.responses.create.CreateCarResponse;
 import kodlama.io.rentacar.business.dto.responses.get.GetAllCarsResponse;
 import kodlama.io.rentacar.business.dto.responses.get.GetCarResponse;
 import kodlama.io.rentacar.business.dto.responses.update.UpdateCarResponse;
+import kodlama.io.rentacar.business.rules.CarBusinessRules;
 import kodlama.io.rentacar.entities.concretes.Car;
 import kodlama.io.rentacar.entities.concretes.enums.State;
 import kodlama.io.rentacar.repository.abstracts.CarRepository;
@@ -23,6 +24,7 @@ import java.util.List;
 public class CarManager implements CarService {
     private final CarRepository repository;
     private final ModelMapper mapper;
+    private final CarBusinessRules rules;
     @Override
     public List<GetAllCarsResponse> getAll(boolean includeMaintenance) {
 
@@ -37,7 +39,7 @@ public class CarManager implements CarService {
 
     @Override
     public GetCarResponse getById(int id) {
-        checkIfCarExistsById(id);
+        rules.checkIfCarExistsById(id);
         Car car = repository.findById(id).orElseThrow();
         GetCarResponse response = mapper.map(car,GetCarResponse.class);
         return response;
@@ -56,7 +58,7 @@ public class CarManager implements CarService {
 
     @Override
     public UpdateCarResponse update(int id, UpdateCarRequest request) {
-        checkIfCarExistsById(id);
+        rules.checkIfCarExistsById(id);
         Car car = mapper.map(request,Car.class);
         car.setId(id);
         repository.save(car);
@@ -67,7 +69,7 @@ public class CarManager implements CarService {
 
     @Override
     public void delete(int id) {
-        checkIfCarExistsById(id);
+        rules.checkIfCarExistsById(id);
         repository.deleteById(id);
     }
 
@@ -76,10 +78,6 @@ public class CarManager implements CarService {
         Car car= repository.findById(carId).orElseThrow();
         car.setState(state);
         repository.save(car);
-    }
-
-    private void checkIfCarExistsById(int id){
-        if(!repository.existsById(id)) throw new RuntimeException("Böyle bir araba mevcut değil!");
     }
 
     private List<Car> filterCarsByMaintenanceState(boolean includeMaintenance){
