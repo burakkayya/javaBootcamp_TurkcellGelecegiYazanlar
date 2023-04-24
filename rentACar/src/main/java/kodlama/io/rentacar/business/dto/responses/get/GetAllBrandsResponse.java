@@ -14,9 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class GetAllBrandsResponse {
     private int id;
-    private int carId;
-    private String information;
-    private boolean isCompleted;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private String name;
+    //private List<GetAllModelsResponse> models;
 }
